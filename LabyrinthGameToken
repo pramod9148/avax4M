@@ -1,0 +1,63 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.18;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+
+contract EnchantedLabyrinthGameToken is ERC20, Ownable {
+    enum SubscriptionLevel { Novice, Explorer, Master }
+
+    event SubscriptionRedeemed(address indexed account, SubscriptionLevel subscriptionLevel, uint256 subscriptionCost);
+
+    mapping(address => SubscriptionLevel) public userSubscriptions;
+
+    uint256 public constant Novice_level = 100;
+    uint256 public constant Explorer_level = 200;
+    uint256 public constant Master_level = 500;
+
+    constructor(address initialOwner) ERC20("Enchanted Labyrinth Game Token", "ELGT") Ownable(initialOwner) {}
+
+    function mintTokens(address to, uint256 total) public onlyOwner {
+        _mint(to, total);
+    }
+
+    function destroyTokens(uint256 total) public {
+        require(total > 0, "Total amount to destroy must be greater than zero");
+        require(balanceOf(msg.sender) >= total, "Insufficient tokens for destruction");
+        _burn(msg.sender, total);
+    }
+
+    function redeemSubscription(uint256 subscriptionCost) public {
+        require(subscriptionCost == Novice_level || subscriptionCost == Explorer_level || subscriptionCost == Master_level, "Invalid subscription cost");
+
+        SubscriptionLevel subscription;
+        string memory subscriptionName;
+
+        if (subscriptionCost == Novice_level) {
+            require(balanceOf(msg.sender) >= Novice_level, "Insufficient tokens for Novice subscription");
+            subscription = SubscriptionLevel.Novice;
+            subscriptionName = "Novice";
+            _burn(msg.sender, Novice_level);
+        } else if (subscriptionCost == Explorer_level) {
+            require(balanceOf(msg.sender) >= Explorer_level, "Insufficient tokens for Explorer subscription");
+            subscription = SubscriptionLevel.Explorer;
+            subscriptionName = "Explorer";
+            _burn(msg.sender, Explorer_level);
+        } else if (subscriptionCost == Master_level) {
+            require(balanceOf(msg.sender) >= Master_level, "Insufficient tokens for Master subscription");
+            subscription = SubscriptionLevel.Master;
+            subscriptionName = "Master";
+            _burn(msg.sender, Master_level);
+        }
+
+        userSubscriptions[msg.sender] = subscription;
+        emit SubscriptionRedeemed(msg.sender, subscription, subscriptionCost);
+    }
+
+    function transferSubscriptionTokens(address user, uint256 total) external {
+        require(user != address(0), "Invalid recipient address");
+        require(balanceOf(msg.sender) >= total, "Insufficient tokens to transfer");
+        _transfer(msg.sender, user, total);
+    }
+}
