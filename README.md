@@ -1,37 +1,34 @@
-# Globe Token
 
-The Globe Token is a Solidity smart contract written for the Ethereum blockchain. It enables users to mint, transfer, burn tokens, and redeem them for different types of virtual globe items.
+# Enchanted Labyrinth Game Token 
+
+## Overview
+
+The Enchanted Labyrinth Game Token (ELGT) contract is designed to manage a token that can be used for gaming subscriptions within the Enchanted Labyrinth game ecosystem. Users can acquire tokens, redeem them for different subscription levels, and transfer tokens to others.
 
 ## Features
 
-- **Minting Tokens**: The contract allows the owner to mint new tokens and distribute them to specified addresses.
+1. **Token Name and Symbol**: ERC20 compliant token named "Enchanted Labyrinth Game Token" with symbol "ELGT".
+   
+2. **Subscription Levels**: Users can redeem tokens for three subscription levels:
+   - **Novice**: Costs 100 ELGT tokens.
+   - **Explorer**: Costs 200 ELGT tokens.
+   - **Master**: Costs 500 ELGT tokens.
 
-- **Burning Tokens**: Users can burn their tokens, removing them from circulation permanently.
+3. **SubscriptionRedeemed Event**: Emits an event when a user redeems tokens for a subscription, indicating the user, subscription level, and tokens spent.
 
-- **Transferring Tokens**: Users can transfer tokens to other addresses.
+4. **Ownership and Permissions**: The contract includes ownership functionalities using the OpenZeppelin `Ownable` contract, allowing specific functions (like minting tokens) to be accessible only by the contract owner.
 
-- **Redeeming Tokens for Globe Items**: Users can redeem their tokens for virtual globe items categorized as Earth, Mars, or Jupiter.
+## Functions
 
-## How to Use
+- **mintTokens**: Allows the owner to mint new ELGT tokens and assign them to a specified address.
+  
+- **destroyTokens**: Allows any user to destroy a specific amount of their own ELGT tokens, reducing their balance permanently.
 
-1. **Minting Tokens**: The owner of the contract can mint new tokens by calling the `mintTokens` function and specifying the beneficiary address and the amount of tokens to mint.
+- **redeemSubscription**: Allows users to redeem tokens for a subscription level. It checks if the user has enough tokens and burns the tokens upon redemption.
 
-2. **Burning Tokens**: Users can burn their tokens by calling the `burnTokens` function and specifying the amount of tokens they want to burn. This action cannot be undone.
+- **transferSubscriptionTokens**: Allows users to transfer ELGT tokens to another address, useful for trading or gifting tokens.
 
-3. **Transferring Tokens**: Users can transfer their tokens to other addresses by calling the `transferTokens` function and specifying the recipient address and the amount of tokens to transfer.
-
-4. **Redeeming Tokens for Globe Items**: Users can redeem their tokens for virtual globe items by calling the `redeemForGlobe` function and specifying the amount of tokens they want to redeem. Depending on the amount of tokens, the user will receive a virtual globe item categorized as Earth, Mars, or Jupiter.
-
-## Requirements
-
-- This contract requires the OpenZeppelin library for ERC20 and Ownable functionalities. Ensure you have the necessary dependencies installed to deploy and interact with the contract.
 
 ## License
 
-This smart contract is released under the MIT License. You can find the license details in the SPDX-License-Identifier at the top of the contract file.
-
-## Author Name 
-
-Pramod
-
-pramodmech9148@gmail.com
+This contract is licensed under the MIT License. See `LICENSE` for more details.
